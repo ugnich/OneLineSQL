@@ -258,12 +258,14 @@ public class OneLineSQL {
         }
     }
 
-    private static void setStatementParams(PreparedStatement stmt, Object params[]) throws SQLException {
+    public static void setStatementParams(PreparedStatement stmt, Object params[]) throws SQLException {
         for (int i = 0; i < params.length; i++) {
             if (params[i] instanceof Integer) {
                 stmt.setInt(i + 1, (Integer) params[i]);
             } else if (params[i] instanceof String) {
                 stmt.setString(i + 1, (String) params[i]);
+            } else if (params[i] instanceof Long) {
+                stmt.setLong(i + 1, (Long) params[i]);
             }
         }
     }
