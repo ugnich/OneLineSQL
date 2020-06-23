@@ -14,4 +14,4 @@ OneLineSQL.execute(mysql, "DELETE FROM users WHERE age=?", 21);
 int userID = OneLineSQL.insertAutoIncrement(mysql, "INSERT INTO users(name,age) VALUES (?,?)", "Alex", 21);
 ```
 ## Limitations
-For query parameters can use only Integer and String.
+For query parameters can use only Integer, Long and String.
