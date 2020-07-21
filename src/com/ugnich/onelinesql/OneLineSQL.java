@@ -99,6 +99,34 @@ public class OneLineSQL {
     }
 
     /**
+     * For SELECT queries that will return single Long result Example:
+     * getLong(mysql, "SELECT uts FROM users WHERE user_id=?", 1234);
+     *
+     * @param sql Connection to database
+     * @param query SQL query
+     * @param params Parameters for query
+     * @return Long from the first line, first column of results, otherwise null
+     */
+    public static Long getLong(Connection sql, String query, Object... params) {
+        Long ret = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = sql.prepareStatement(query);
+            setStatementParams(stmt, params);
+            rs = stmt.executeQuery();
+            if (rs.first()) {
+                ret = rs.getLong(1);
+            }
+        } catch (SQLException e) {
+            printException(e, query);
+        } finally {
+            finishSQL(rs, stmt);
+        }
+        return ret;
+    }
+
+    /**
      * For SELECT queries that will return single string result
      * Example: getString(mysql, "SELECT name FROM users WHERE user_id=?", 1234);
      * @param sql Connection to database
