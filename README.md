@@ -13,6 +13,11 @@ ArrayList<String> userNames = OneLineSQL.getArrayString(mysql, "SELECT name FROM
 
 OneLineSQL.execute(mysql, "DELETE FROM users WHERE age=?", 21);
 int userID = OneLineSQL.insertAutoIncrement(mysql, "INSERT INTO users(name,age) VALUES (?,?)", "Alex", 21);
+
+HashMap<String, Object> data = new HashMap<>();
+data.put("name", "Alex");
+data.put("age", 21);
+boolean success = OneLineSQL.insert(mysql, "users", data);
 ```
 ## Limitations
 For query parameters can use only Integer, Long and String.

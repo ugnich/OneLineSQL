@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * Perform queries using java.sql with one line of code.
@@ -234,6 +236,33 @@ public class OneLineSQL {
             finishSQL(null, stmt);
         }
         return ret;
+    }
+
+    /**
+     * INSERT one row in a table using column names and values from Map
+     *
+     * @param sql Connection to a database
+     * @param table Table's name
+     * @param data Map with column names as keys and column values as map's values
+     * @return true if the query was successful, false otherwise.
+     */
+    public static boolean insert(Connection sql, String table, Map<String, Object> data) {
+        String columns[] = new String[data.size()];
+        Object values[] = new Object[data.size()];
+
+        // Have to use entrySet to guarantee the order
+        int i = 0;
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
+            columns[i] = entry.getKey();
+            values[i] = entry.getValue();
+            i++;
+        }
+
+        String query = "INSERT INTO " + table
+                + "(" + String.join(",", columns) + ") VALUES "
+                + "(" + String.join(",", Collections.nCopies(data.size(), "?")) + ")";
+
+        return execute(sql, query, values) > 0;
     }
 
     /**
