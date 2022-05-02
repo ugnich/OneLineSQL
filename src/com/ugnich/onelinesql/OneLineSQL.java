@@ -294,6 +294,36 @@ public class OneLineSQL {
     }
 
     /**
+     * UPDATE table, change multiple columns in one query
+     * Example: update(mysql, "users", data, "user_id", 21);
+     * @param sql Connection to database
+     * @param table Table's name
+     * @param data Map with column names as keys and column values as map's values
+     * @param whereKey Column name for WHERE
+     * @param whereValue Column value for WHERE
+     * @return Number of rows that were updated
+     */
+    public static int update(Connection sql, String table, Map<String, Object> data, String whereKey, Object whereValue) {
+        String columns[] = new String[data.size()];
+        Object values[] = new Object[data.size() + 1]; // +1 for whereValue
+
+        // Have to use entrySet to guarantee the order
+        int i = 0;
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
+            columns[i] = entry.getKey();
+            values[i] = entry.getValue();
+            i++;
+        }
+        values[i] = whereValue;
+
+        String query = "UPDATE " + table
+                + " SET " + String.join("=?,", columns) + "=?"
+                + " WHERE " + whereKey + "=?";
+
+        return OneLineSQL.execute(sql, query, values);
+    }
+
+    /**
      * Close ResultSet and Statement
      * @param rs ResultSet
      * @param stmt Statement
