@@ -353,6 +353,8 @@ public class OneLineSQL {
                 stmt.setString(i + 1, (String) params[i]);
             } else if (params[i] instanceof Long) {
                 stmt.setLong(i + 1, (Long) params[i]);
+            } else if (params[i] instanceof Boolean) {
+                stmt.setBoolean(i + 1, (Boolean) params[i]);
             }
         }
     }
