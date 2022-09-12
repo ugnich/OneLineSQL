@@ -18,6 +18,8 @@ HashMap<String, Object> data = new HashMap<>();
 data.put("name", "Alex");
 data.put("age", 21);
 boolean success = OneLineSQL.insert(mysql, "users", data);
+
+int userID = OneLineSQL.insertAutoIncrement(mysql, "users", data);
 ```
 ## Limitations
-For query parameters can use only Integer, Long and String.
+For query parameters can use only Integer, Long, Boolean, and String.

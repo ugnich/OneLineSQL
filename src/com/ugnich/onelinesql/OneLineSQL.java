@@ -266,6 +266,51 @@ public class OneLineSQL {
     }
 
     /**
+     * INSERT one row in a table using column names and values from Map, return
+     * the AUTO_INCREMENT value
+     *
+     * @param sql Connection to a database
+     * @param table Table's name
+     * @param data Map with column names as keys and column values as map's
+     * values
+     * @return Value of AUTO_INCREMENT column, otherwise 0
+     */
+    public static int insertAutoIncrement(Connection sql, String table, Map<String, Object> data) {
+        String columns[] = new String[data.size()];
+        Object values[] = new Object[data.size()];
+
+        // Have to use entrySet to guarantee the order
+        int i = 0;
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
+            columns[i] = entry.getKey();
+            values[i] = entry.getValue();
+            i++;
+        }
+
+        String query = "INSERT INTO " + table
+                + "(" + String.join(",", columns) + ") VALUES "
+                + "(" + String.join(",", Collections.nCopies(data.size(), "?")) + ")";
+
+        int id = 0;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = sql.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            setStatementParams(stmt, values);
+            stmt.executeUpdate();
+            rs = stmt.getGeneratedKeys();
+            if (rs.first()) {
+                id = rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            printException(e, query);
+        } finally {
+            finishSQL(rs, stmt);
+        }
+        return id;
+    }
+
+    /**
      * INSERT one row in a table, return the AUTO_INCREMENT value
      * Example: insertAutoIncrement(mysql, "INSERT INTO users(name,age) VALUES (?,?)", "Alex", 21);
      * @param sql Connection to database
