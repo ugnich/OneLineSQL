@@ -33,7 +33,7 @@ public class OneLineSQL {
             stmt = sql.prepareStatement(query);
             setStatementParams(stmt, params);
             rs = stmt.executeQuery();
-            if (rs.first() && rs.getBoolean(1)) {
+            if (rs.next() && rs.getBoolean(1)) {
                 ret = true;
             }
         } catch (SQLException e) {
@@ -61,7 +61,7 @@ public class OneLineSQL {
             stmt = sql.prepareStatement(query);
             setStatementParams(stmt, params);
             rs = stmt.executeQuery();
-            if (rs.first()) {
+            if (rs.next()) {
                 ret = rs.getInt(1);
             }
         } catch (SQLException e) {
@@ -89,8 +89,8 @@ public class OneLineSQL {
             stmt = sql.prepareStatement(query);
             setStatementParams(stmt, params);
             rs = stmt.executeQuery();
-            if (rs.first()) {
-                ret = new Integer(rs.getInt(1));
+            if (rs.next()) {
+                ret = rs.getInt(1);
             }
         } catch (SQLException e) {
             printException(e, query);
@@ -117,7 +117,7 @@ public class OneLineSQL {
             stmt = sql.prepareStatement(query);
             setStatementParams(stmt, params);
             rs = stmt.executeQuery();
-            if (rs.first()) {
+            if (rs.next()) {
                 ret = rs.getLong(1);
             }
         } catch (SQLException e) {
@@ -144,7 +144,7 @@ public class OneLineSQL {
             stmt = sql.prepareStatement(query);
             setStatementParams(stmt, params);
             rs = stmt.executeQuery();
-            if (rs.first()) {
+            if (rs.next()) {
                 ret = rs.getString(1);
             }
         } catch (SQLException e) {
@@ -172,7 +172,6 @@ public class OneLineSQL {
             stmt = sql.prepareStatement(query);
             setStatementParams(stmt, params);
             rs = stmt.executeQuery();
-            rs.beforeFirst();
             while (rs.next()) {
                 ret.add(rs.getInt(1));
             }
@@ -202,7 +201,6 @@ public class OneLineSQL {
             stmt = sql.prepareStatement(query);
             setStatementParams(stmt, params);
             rs = stmt.executeQuery();
-            rs.beforeFirst();
             while (rs.next()) {
                 ret.add(rs.getString(1));
             }
@@ -299,7 +297,7 @@ public class OneLineSQL {
             setStatementParams(stmt, values);
             stmt.executeUpdate();
             rs = stmt.getGeneratedKeys();
-            if (rs.first()) {
+            if (rs.next()) {
                 id = rs.getInt(1);
             }
         } catch (SQLException e) {
@@ -327,7 +325,7 @@ public class OneLineSQL {
             setStatementParams(stmt, params);
             stmt.executeUpdate();
             rs = stmt.getGeneratedKeys();
-            if (rs.first()) {
+            if (rs.next()) {
                 id = rs.getInt(1);
             }
         } catch (SQLException e) {
