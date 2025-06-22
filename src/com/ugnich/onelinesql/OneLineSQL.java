@@ -13,7 +13,7 @@ import java.util.Map;
  * Perform queries using java.sql with one line of code.
  * https://github.com/ugnich/OneLineSQL
  * MIT License
- * @version 1.0
+ * @version 1.2
  */
 public class OneLineSQL {
 
@@ -146,6 +146,34 @@ public class OneLineSQL {
             rs = stmt.executeQuery();
             if (rs.next()) {
                 ret = rs.getString(1);
+            }
+        } catch (SQLException e) {
+            printException(e, query);
+        } finally {
+            finishSQL(rs, stmt);
+        }
+        return ret;
+    }
+    
+    /**
+     * For SELECT queries that will return single BLOB result
+     * Example: getBytes(mysql, "SELECT photo FROM users WHERE user_id=?", 1234);
+     *
+     * @param sql Connection to database
+     * @param query SQL query
+     * @param params Parameters for query
+     * @return String from the first line, first column of results, otherwise null
+     */
+    public static byte[] getBytes(Connection sql, String query, Object... params) {
+        byte ret[] = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            stmt = sql.prepareStatement(query);
+            setStatementParams(stmt, params);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                ret = rs.getBytes(1);
             }
         } catch (SQLException e) {
             printException(e, query);
@@ -398,6 +426,10 @@ public class OneLineSQL {
                 stmt.setLong(i + 1, (Long) params[i]);
             } else if (params[i] instanceof Boolean) {
                 stmt.setBoolean(i + 1, (Boolean) params[i]);
+            } else if (params[i] instanceof byte[]) {
+                stmt.setBytes(i + 1, (byte[]) params[i]);
+            } else {
+                stmt.setObject(i + 1, params[i]);
             }
         }
     }
